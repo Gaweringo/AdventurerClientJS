@@ -9,7 +9,6 @@ import {
 } from "@angular/forms";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { Router, ActivatedRoute } from "@angular/router";
-const storage = window.require("electron-json-storage");
 
 /**
  * Error matcher for the printer address.
@@ -56,19 +55,6 @@ export class ConnectFormComponent implements OnInit {
    * Gets the matcher instance for this form.
    */
   public matcher = new MyErrorStateMatcher();
-
-  GetLastIP(): string {
-    storage.get("lastIP", function (error, data) {
-      if (error) {
-        ErrorLogger.NonFatalError(error);
-        return "Error";
-      } else {
-        console.log("GET DATA   " + data.lastIP);
-        return data.lastIP;
-      }
-    });
-    return "Nothing from storage or so";
-  }
 
   /**
    * Gets the printer address form.
