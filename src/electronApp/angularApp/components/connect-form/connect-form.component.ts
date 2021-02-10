@@ -1,4 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from "@angular/core";
 import { PrinterService } from "../../services/printerService";
 import { ErrorLogger } from "../../../core/errorLogger";
 import {
@@ -40,7 +49,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   templateUrl: "./connect-form.component.html",
   styleUrls: ["./connect-form.component.css"],
 })
-export class ConnectFormComponent implements OnInit {
+export class ConnectFormComponent implements OnInit, AfterViewInit {
   /**
    * Gets a value indicating that the error message should be shown.
    */
@@ -50,7 +59,7 @@ export class ConnectFormComponent implements OnInit {
    * The URL that the user was attempting to navigate to when directed here.
    */
   private returnUrl: string;
-
+  
   /**
    * Gets the matcher instance for this form.
    */
@@ -60,6 +69,8 @@ export class ConnectFormComponent implements OnInit {
    * Gets the printer address form.
    */
   PrinterAddress = new FormControl("", [Validators.required]);
+  
+  @ViewChild("ipinput") myInputField: ElementRef;
 
   /**
    * Initializes a new instance of the ConnectFormComponent.
@@ -95,6 +106,11 @@ export class ConnectFormComponent implements OnInit {
   ngAfterViewInit(): void {
     let lastIP = localStorage.getItem("lastIP") || ""; // get the lastIP from storage, if not found set ""
     this.PrinterAddress.setValue(lastIP);
+    this.editMyInputField();
+  }
+
+  editMyInputField(): void {
+    this.myInputField.nativeElement.focus();
   }
 
   /**

@@ -13,9 +13,9 @@
                [formControl]="PrinterAddress"
                [errorStateMatcher]="matcher"
                placeholder="Ex. 192.168.1.14"
+               #ipinput
                onfocus="this.select()"
-               autofocus>
-
+               onclick="this.select()">
         <mat-error *ngIf="PrinterAddress.hasError('required')">
             Printer address is <strong>required</strong>
         </mat-error>
