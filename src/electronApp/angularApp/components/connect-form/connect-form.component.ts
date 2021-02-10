@@ -12,7 +12,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 const storage = window.require("electron-json-storage");
 
 /**
- * Error matcher for teh printer address.
+ * Error matcher for the printer address.
  */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   /**
@@ -103,19 +103,12 @@ export class ConnectFormComponent implements OnInit {
     });
   }
 
+  /**
+   * Invoked when the Angular component finished rendering.
+   */
   ngAfterViewInit(): void {
-    let temp = "not from storage";
-    storage.get("lastIP", function (error, data) {
-      if (error) {
-        ErrorLogger.NonFatalError(error);
-        temp = "Error";
-      } else {
-        // console.log("GET DATA   " + data.lastIP);
-        temp = data.lastIP;
-      }
-    });
-    console.log("temp log: " + temp);
-    this.PrinterAddress.setValue(temp);
+    let lastIP = localStorage.getItem("lastIP") || ""; // get the lastIP from storage, if not found set ""
+    this.PrinterAddress.setValue(lastIP);
   }
 
   /**
@@ -128,13 +121,7 @@ export class ConnectFormComponent implements OnInit {
 
     try {
       await this.printerService.ConnectAsync(this.PrinterAddress.value);
-      storage.set(
-        "lastIP",
-        { lastIP: this.PrinterAddress.value },
-        function (error) {
-          if (error) throw error;
-        }
-      );
+      localStorage.setItem("lastIP", this.PrinterAddress.value);
     } catch (e) {
       this.isError = true;
       ErrorLogger.NonFatalError(e);
