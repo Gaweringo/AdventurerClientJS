@@ -110,7 +110,7 @@ export class ConnectFormComponent implements OnInit, AfterViewInit {
   }
 
   editMyInputField(): void {
-    this.myInputField.nativeElement.focus();
+    this.myInputField.nativeElement.click();
   }
 
   /**
