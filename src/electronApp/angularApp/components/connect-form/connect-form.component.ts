@@ -18,6 +18,7 @@ import {
 } from "@angular/forms";
 import { ErrorStateMatcher } from "@angular/material/core";
 import { Router, ActivatedRoute } from "@angular/router";
+import { DataSaver } from "../../../core/dataSaver";
 
 /**
  * Error matcher for the printer address.
@@ -59,7 +60,7 @@ export class ConnectFormComponent implements OnInit, AfterViewInit {
    * The URL that the user was attempting to navigate to when directed here.
    */
   private returnUrl: string;
-  
+
   /**
    * Gets the matcher instance for this form.
    */
@@ -69,8 +70,8 @@ export class ConnectFormComponent implements OnInit, AfterViewInit {
    * Gets the printer address form.
    */
   PrinterAddress = new FormControl("", [Validators.required]);
-  
-  @ViewChild("ipinput") myInputField: ElementRef;
+
+  @ViewChild("ipinput") ipInputField: ElementRef;
 
   /**
    * Initializes a new instance of the ConnectFormComponent.
@@ -104,13 +105,10 @@ export class ConnectFormComponent implements OnInit, AfterViewInit {
    * Invoked when the Angular component finished rendering.
    */
   ngAfterViewInit(): void {
-    let lastIP = localStorage.getItem("lastIP") || ""; // get the lastIP from storage, if not found set ""
+    let lastIP = DataSaver.GetLastIP(); // get the lastIP from storage, if not found set ""
     this.PrinterAddress.setValue(lastIP);
-    this.editMyInputField();
-  }
-
-  editMyInputField(): void {
-    this.myInputField.nativeElement.click();
+    this.ipInputField.nativeElement.click(); // click on input field
+    this.PrinterAddress.markAsDirty();
   }
 
   /**
@@ -123,10 +121,11 @@ export class ConnectFormComponent implements OnInit, AfterViewInit {
 
     try {
       await this.printerService.ConnectAsync(this.PrinterAddress.value);
-      localStorage.setItem("lastIP", this.PrinterAddress.value);
+      DataSaver.SetLastIP(this.PrinterAddress.value);
     } catch (e) {
       this.isError = true;
       ErrorLogger.NonFatalError(e);
     }
+
   }
 }
