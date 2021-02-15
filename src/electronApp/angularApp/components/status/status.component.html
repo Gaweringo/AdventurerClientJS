@@ -68,18 +68,29 @@
                 <div *ngIf="PrintStateLoaded">
                     <div *ngIf="PrintPaused; then printPausedBlock else printRunningBlock"></div>
                     <ng-template #printPausedBlock>
-                        <button disabled={{!IsPrinting}} (click)="ResumePrinting()">
+                        <button disabled={{!IsPrinting}}
+                                (click)="ResumePrinting()"
+                                matTooltip="Resume Print"
+                                matTooltipShowDelay="900">
                             <mat-icon aria-label="Resume Print">play_arrow</mat-icon>
                         </button>
                     </ng-template>
 
                     <ng-template #printRunningBlock>
-                        <button disabled={{!IsPrinting}} mat-stroked-button (click)="PausePrinting()">
+                        <button disabled={{!IsPrinting}}
+                                mat-stroked-button
+                                (click)="PausePrinting()"
+                                matTooltip="Pause Print"
+                                matTooltipShowDelay="900">
                             <mat-icon aria-label="Pause Print">pause</mat-icon>
                         </button>
                     </ng-template>
                 </div>
-                <button disabled={{!IsPrinting}} mat-stroked-button (click)="OpenStopPrintingDialog()">
+                <button disabled={{!IsPrinting}}
+                        mat-stroked-button
+                        (click)="OpenStopPrintingDialog()"
+                        matTooltip="Stop Print"
+                        matTooltipShowDelay="900">
                     <mat-icon aria-label="Stop Print">stop</mat-icon>
                 </button>
             </div>
@@ -89,7 +100,8 @@
     <tr>
         <th></th>
         <td>
-            <a mat-stroked-button (click)="Disconnect()">Disconnect</a>
+            <a mat-stroked-button
+               (click)="Disconnect()">Disconnect</a>
         </td>
     </tr>
 </table>
