@@ -5,4 +5,5 @@ export * from './pendingResponse';
 export * from './printerDebugMonitor';
 export * from './printerStatus';
 export * from './temperatureResponse';
+export * from "./printingPercentageResponse";
 export * from './vector3';

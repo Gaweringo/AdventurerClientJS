@@ -4,7 +4,7 @@ const { crc32 } = window.require('crc');
 
 import { PrinterResponseReader } from './printerResponseReader';
 import { PrinterCamera } from './printerCamera'
-import { PrinterStatus, FirmwareVersionResponse, TemperatureResponse, IPrinterResponse, PrinterDebugMonitor } from './entities';
+import { PrinterStatus, FirmwareVersionResponse, TemperatureResponse, IPrinterResponse, PrinterDebugMonitor, PrintingPercentageResponse } from './entities';
 import { MachineCommands } from './machineCommands';
 import { PromiseWithProgress } from '../core/PromiseWithProgress'
 import { ErrorLogger } from 'electronApp/core';
@@ -200,6 +200,18 @@ export class Printer {
 
         // Get its answer
         return this.responseReader.GerPrinterResponse<TemperatureResponse>(MachineCommands.GetTemperature);
+    }
+
+    /**
+     * Gets the printing percentage.
+     */
+    GetPrintPercentageAsync(): Promise<PrintingPercentageResponse> {
+        this.ValidatePrinterReady();
+        const message = '~' + MachineCommands.GetPrintPercent;
+        this.SendToPrinter(message);
+
+        // Get its answer
+        return this.responseReader.GerPrinterResponse<PrintingPercentageResponse>(MachineCommands.GetPrintPercent);
     }
 
     /**

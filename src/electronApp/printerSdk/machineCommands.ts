@@ -47,4 +47,9 @@ export class MachineCommands
      * The resume printing command
      */
     static readonly ResumePrinting = 'M24'
+
+    /**
+     * The get print percentage command
+     */
+    static readonly GetPrintPercent = 'M27'
 }

@@ -1,5 +1,5 @@
 import { MachineCommands } from './machineCommands';
-import { IPrinterResponse, PrinterStatus, TemperatureResponse, FirmwareVersionResponse, PendingCall, PendingResponse } from './entities';
+import { IPrinterResponse, PrinterStatus, TemperatureResponse, FirmwareVersionResponse, PendingCall, PendingResponse, PrintingPercentageResponse } from './entities';
 
 /**
  * A class for reading responses from the printer.
@@ -184,6 +184,8 @@ export class PrinterResponseReader
                 return new FirmwareVersionResponse(data);
             case MachineCommands.GetTemperature:
                 return new TemperatureResponse(data);
+            case MachineCommands.GetPrintPercent:
+                return new PrintingPercentageResponse(data);
             case MachineCommands.BeginWriteToSdCard:
             case MachineCommands.EndWriteToSdCard:
             case MachineCommands.PrintFileFromSd:

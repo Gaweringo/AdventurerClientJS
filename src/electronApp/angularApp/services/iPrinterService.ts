@@ -1,4 +1,4 @@
-import { PrinterStatus, FirmwareVersionResponse, TemperatureResponse, PrinterDebugMonitor } from '../../printerSdk/entities';
+import { PrinterStatus, FirmwareVersionResponse, TemperatureResponse, PrinterDebugMonitor, PrintingPercentageResponse } from '../../printerSdk/entities';
 import { PrinterCamera } from '../../printerSdk/printerCamera'
 import { EventDispatcher, PromiseWithProgress } from '../../core';
 
@@ -108,4 +108,9 @@ export interface IPrinterService {
      * Disable traffic logging.
      */
     DisableDebugLogging(): void;
+    
+    /**
+     * Requests the printing percentage from the printer.
+     */
+    GetPrintingPercentAsync(): Promise<PrintingPercentageResponse>;
 }
