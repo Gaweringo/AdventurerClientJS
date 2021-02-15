@@ -4,14 +4,15 @@ import { ErrorLogger } from 'electronApp/core/errorLogger';
 import { StopPrintingConfirmationDialogComponent } from "../stop-printing-confirmation-dialog/stop-printing-confirmation-dialog.component";
 import { MatDialog } from '@angular/material/dialog';
 import { CameraState } from '../../../printerSdk/printerCamera'
+import { Byte } from "@angular/compiler/src/util";
 
 /**
  * The printer status component for showing the printer status.
  */
 @Component({
-  selector: 'app-status',
-  templateUrl: './status.component.html',
-  styleUrls: ['./status.component.css']
+  selector: "app-status",
+  templateUrl: "./status.component.html",
+  styleUrls: ["./status.component.css"],
 })
 export class StatusComponent implements OnInit {
   /**
@@ -85,14 +86,19 @@ export class StatusComponent implements OnInit {
   public CameraStateLoaded: boolean;
 
   /**
-    * Indicates that the state of the print is loaded.
-    */
+   * Indicates that the state of the print is loaded.
+   */
   public PrintStateLoaded: boolean;
 
   /**
    * The printer is printing.
    */
   public IsPrinting: boolean;
+
+  /**
+   * The current printing percentage.
+   */
+  public PrintPercent: Byte;
 
   /**
    * The refresh interval for refreshing the data.
@@ -104,29 +110,46 @@ export class StatusComponent implements OnInit {
    * @param printerService The printer service.
    * @param dialog The Angular-Material dialog.
    */
-  constructor(private printerService: PrinterService, private dialog: MatDialog) { }
+  constructor(
+    private printerService: PrinterService,
+    private dialog: MatDialog
+  ) {}
 
   /**
    * Updates the status text.
    */
   private async UpdateStatusText(): Promise<void> {
     try {
-      ErrorLogger.Trace("StatsComponent::UpdateStatusText - Getting Printer Status");
+      ErrorLogger.Trace(
+        "StatsComponent::UpdateStatusText - Getting Printer Status"
+      );
       const status = await this.printerService.GetPrinterStatusAsync();
       this.PrinterStatus = status.MachineStatus;
       this.MoveMode = status.MoveMode;
-      this.Endstop = status.Endstop.X.toString() + ',' + status.Endstop.Y.toString() + ',' + status.Endstop.Z.toString();
-      
-      ErrorLogger.Trace("StatsComponent::UpdateStatusText - Getting firmware Info");
+      this.Endstop =
+        status.Endstop.X.toString() +
+        "," +
+        status.Endstop.Y.toString() +
+        "," +
+        status.Endstop.Z.toString();
+
+      ErrorLogger.Trace(
+        "StatsComponent::UpdateStatusText - Getting firmware Info"
+      );
       const firmwareInfo = await this.printerService.GetFirmwareVersionAsync();
       this.FirmwareVersion = firmwareInfo.FirmwareVersion;
       this.SerialNumber = firmwareInfo.SerialNumber;
       this.PrinterName = firmwareInfo.MachineType;
-      this.BuildVolume = firmwareInfo.BuildVolume.X.toString()
-        + ',' + firmwareInfo.BuildVolume.Y.toString()
-        + ',' + firmwareInfo.BuildVolume.Z.toString();
+      this.BuildVolume =
+        firmwareInfo.BuildVolume.X.toString() +
+        "," +
+        firmwareInfo.BuildVolume.Y.toString() +
+        "," +
+        firmwareInfo.BuildVolume.Z.toString();
 
-      ErrorLogger.Trace("StatsComponent::UpdateStatusText - Getting Printer Temp");
+      ErrorLogger.Trace(
+        "StatsComponent::UpdateStatusText - Getting Printer Temp"
+      );
       const temp = await this.printerService.GetTemperatureAsync();
       this.Tool0Temp = temp.Tool0Temp.toString();
       this.BuildPlateTemp = temp.BuildPlateTemp.toString();
@@ -137,6 +160,9 @@ export class StatusComponent implements OnInit {
       this.CameraAvailable = cameraState == CameraState.Available;
       this.CameraStateLoaded = cameraState != CameraState.Unknown;
 
+      const printPercent = await this.printerService.GetPrintingPercentAsync();
+      this.PrintPercent = printPercent.Percentage;
+
       if (status.MoveMode == "PAUSED") {
         this.PrintPaused = true;
       } else {
@@ -144,13 +170,11 @@ export class StatusComponent implements OnInit {
       }
       if (this.PrinterStatus == "BUILDING_FROM_SD") {
         this.IsPrinting = true;
-      }
-      else {
+      } else {
         this.IsPrinting = false;
       }
       this.PrintStateLoaded = true;
-    }
-    catch (e) {
+    } catch (e) {
       ErrorLogger.NonFatalError(e);
     }
   }
@@ -174,8 +198,8 @@ export class StatusComponent implements OnInit {
   }
 
   /**
-    * Opens the confirmation dialog to stop printing.
-    */
+   * Opens the confirmation dialog to stop printing.
+   */
   public OpenStopPrintingDialog(): void {
     // Open the confirmation dialog and prevent soft dismissing
     const diafRef = this.dialog.open(StopPrintingConfirmationDialogComponent);
@@ -205,8 +229,8 @@ export class StatusComponent implements OnInit {
   }
 
   /**
-  * Invoked when the Angular component is destroyed.
-  */
+   * Invoked when the Angular component is destroyed.
+   */
   ngOnDestroy(): void {
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
