@@ -20,7 +20,7 @@ var server = net.createServer((socket) => {
                 }
             }
 
-            var respond = function(text) {
+            var respond = function (text) {
                 socket.write(text + "\n");
             }
 
@@ -71,6 +71,13 @@ var server = net.createServer((socket) => {
                         break;
 
                     case "M28":
+                        respond("ok");
+
+                        break;
+
+                    case "M27":
+                        var percent = Math.floor(Math.random() * Math.floor(100));
+                        respond("SD printing byte " + percent + "/100");
                         respond("ok");
 
                         break;
